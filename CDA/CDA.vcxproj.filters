@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="SerialPort">
+      <UniqueIdentifier>{ff5d32a5-b08d-4795-bebb-6c21ebefc0ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CDA.h">
@@ -48,6 +51,9 @@
     <ClInclude Include="CAboutExDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\SerialPort\CSerialPortBase.h">
+      <Filter>SerialPort</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDA.cpp">
@@ -76,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="CAboutExDlg.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SerialPort\CSerialPortBase.cpp">
+      <Filter>SerialPort</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
