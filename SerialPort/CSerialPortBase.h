@@ -113,6 +113,8 @@ public:
 	CCSerialPortBase();		// CCSerialPortBase 构造函数
 	~CCSerialPortBase();	// CCSerialPortBase 析构函数
 
+	bool CCSerialPortBaseGetStatus() const;			// CCSerialPortBase 获取串口状态
+
 	void CCSerialPortBaseSetSendBuf(unsigned char* pBuff, int nSize);	// CCSerialPortBase 设置发送缓冲
 	void CCSerialPortBaseGetRecvBuf(unsigned char* pBuff, int nSize);	// CCSerialPortBase 获取接收缓冲
 

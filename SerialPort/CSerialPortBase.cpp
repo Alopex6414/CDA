@@ -57,6 +57,12 @@ CCSerialPortBase::~CCSerialPortBase()
 	DeleteCriticalSection(&m_csCOMSync);
 }
 
+// CCSerialPortBase 获取串口状态
+bool CCSerialPortBase::CCSerialPortBaseGetStatus() const
+{
+	return m_bOpen;
+}
+
 // CCSerialPortBase 枚举串口(注册表)
 void CCSerialPortBase::EnumSerialPort()
 {
