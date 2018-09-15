@@ -1,6 +1,5 @@
 #include "CSerialPortBase.h"
-
-bool CCSerialPortBase::m_sbExit = false;
+#include "CThreadSafe.h"
 
 // CCSerialPortBase 构造函数
 CCSerialPortBase::CCSerialPortBase()
@@ -22,7 +21,15 @@ CCSerialPortBase::CCSerialPortBase()
 // CCSerialPortBase 析构函数
 CCSerialPortBase::~CCSerialPortBase()
 {
+	EnterCriticalSection(&m_csCOMSync);
 	m_bOpen = false;
+	LeaveCriticalSection(&m_csCOMSync);
+
+	if (INVALID_HANDLE_VALUE != m_hCOM)
+	{
+		::CloseHandle(m_hCOM);
+		m_hCOM = INVALID_HANDLE_VALUE;
+	}
 
 	if (NULL != m_ovWrite.hEvent)
 	{
@@ -44,14 +51,9 @@ CCSerialPortBase::~CCSerialPortBase()
 
 	if (INVALID_HANDLE_VALUE != m_hListenThread)
 	{
+		::WaitForSingleObject(m_hListenThread, INFINITE);
 		::CloseHandle(m_hListenThread);
 		m_hListenThread = INVALID_HANDLE_VALUE;
-	}
-
-	if (INVALID_HANDLE_VALUE != m_hCOM)
-	{
-		::CloseHandle(m_hCOM);
-		m_hCOM = INVALID_HANDLE_VALUE;
 	}
 
 	DeleteCriticalSection(&m_csCOMSync);
@@ -60,6 +62,7 @@ CCSerialPortBase::~CCSerialPortBase()
 // CCSerialPortBase 获取串口状态
 bool CCSerialPortBase::CCSerialPortBaseGetStatus() const
 {
+	CThreadSafe ThreadSafe(&m_csCOMSync);
 	return m_bOpen;
 }
 
@@ -213,6 +216,10 @@ bool CCSerialPortBase::CCSerialPortBaseInit(S_SERIALPORT_PROPERTY sCommProperty)
 		return false;
 	}
 
+	EnterCriticalSection(&m_csCOMSync);
+	m_bOpen = true;
+	LeaveCriticalSection(&m_csCOMSync);
+
 	return true;
 }
 
@@ -223,8 +230,6 @@ bool CCSerialPortBase::CCSerialPortBaseInitListen()
 	{
 		return false;
 	}
-
-	m_sbExit = false;
 
 	unsigned int uThreadID;
 
@@ -247,11 +252,34 @@ bool CCSerialPortBase::CCSerialPortBaseInitListen()
 // CCSerialPortBase 关闭串口
 void CCSerialPortBase::CCSerialPortBaseClose()
 {
+	EnterCriticalSection(&m_csCOMSync);
+	m_bOpen = false;
+	LeaveCriticalSection(&m_csCOMSync);
+
 	if (INVALID_HANDLE_VALUE != m_hCOM)
 	{
 		::CloseHandle(m_hCOM);
 		m_hCOM = INVALID_HANDLE_VALUE;
 	}
+
+	if (NULL != m_ovWrite.hEvent)
+	{
+		::CloseHandle(m_ovWrite.hEvent);
+		m_ovWrite.hEvent = NULL;
+	}
+
+	if (NULL != m_ovRead.hEvent)
+	{
+		::CloseHandle(m_ovRead.hEvent);
+		m_ovRead.hEvent = NULL;
+	}
+
+	if (NULL != m_ovWait.hEvent)
+	{
+		::CloseHandle(m_ovWait.hEvent);
+		m_ovWait.hEvent = NULL;
+	}
+
 }
 
 // CCSerialPortBase 关闭串口监听
@@ -259,9 +287,6 @@ void CCSerialPortBase::CCSerialPortBaseCloseListen()
 {
 	if (INVALID_HANDLE_VALUE != m_hListenThread)
 	{
-		EnterCriticalSection(&m_csCOMSync);
-		m_sbExit = true;
-		LeaveCriticalSection(&m_csCOMSync);
 		::WaitForSingleObject(m_hListenThread, INFINITE);
 		::CloseHandle(m_hListenThread);
 		m_hListenThread = INVALID_HANDLE_VALUE;
@@ -287,16 +312,14 @@ bool CCSerialPortBase::CCSerialPortBaseOpenPort(S_SERIALPORT_PROPERTY sCommPrope
 		return false;
 	}
 
-	m_bOpen = true;
 	return true;
 }
 
 // CCSerialPortBase 关闭串口
 void CCSerialPortBase::CCSerialPortBaseClosePort()
 {
-	CCSerialPortBaseCloseListen();
 	CCSerialPortBaseClose();
-	m_bOpen = false;
+	CCSerialPortBaseCloseListen();
 }
 
 // CCSerialPortBase 设置发送缓冲
@@ -352,7 +375,7 @@ unsigned int CALLBACK CCSerialPortBase::OnReceiveBuffer(LPVOID lpParameters)
 	while (true)
 	{
 		EnterCriticalSection(&pCSerialPortBase->m_csCOMSync);
-		if (m_sbExit)
+		if (!pCSerialPortBase->m_bOpen)
 		{
 			LeaveCriticalSection(&pCSerialPortBase->m_csCOMSync);
 			break;

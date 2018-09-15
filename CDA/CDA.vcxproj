@@ -193,6 +193,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\SerialPort\CSerialPortBase.h" />
+    <ClInclude Include="..\SerialPort\CThreadSafe.h" />
     <ClInclude Include="CAboutExDlg.h" />
     <ClInclude Include="CDA.h" />
     <ClInclude Include="CDADlg.h" />
@@ -208,6 +209,9 @@
   <ItemGroup>
     <ClCompile Include="..\SerialPort\CSerialPortBase.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\SerialPort\CThreadSafe.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="CAboutExDlg.cpp" />

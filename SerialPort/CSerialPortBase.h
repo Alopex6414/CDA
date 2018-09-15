@@ -81,11 +81,10 @@ private:
 	OVERLAPPED m_ovRead;	// CCSerialPortBase OverLapped Read
 	OVERLAPPED m_ovWait;	// CCSerialPortBase OverLapped Wait
 
-private:
+public:
 	volatile bool m_bOpen;	// CCSerialPortBase Open Flag(串口打开标志)
 
 private:
-	static bool m_sbExit;	// CCSerialPortBase Exit Flag(串口退出标志)
 	CRITICAL_SECTION m_csCOMSync;	// CCSerialPortBase Critical Section Sync(串口异步接收临界区)
 
 public:

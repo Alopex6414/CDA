@@ -16,6 +16,9 @@
     <Filter Include="SerialPort">
       <UniqueIdentifier>{ff5d32a5-b08d-4795-bebb-6c21ebefc0ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Socket">
+      <UniqueIdentifier>{086eeffe-7e25-4256-b11d-63b3f6e5a4d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CDA.h">
@@ -54,6 +57,9 @@
     <ClInclude Include="..\SerialPort\CSerialPortBase.h">
       <Filter>SerialPort</Filter>
     </ClInclude>
+    <ClInclude Include="..\SerialPort\CThreadSafe.h">
+      <Filter>SerialPort</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDA.cpp">
@@ -84,6 +90,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\SerialPort\CSerialPortBase.cpp">
+      <Filter>SerialPort</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SerialPort\CThreadSafe.cpp">
       <Filter>SerialPort</Filter>
     </ClCompile>
   </ItemGroup>
