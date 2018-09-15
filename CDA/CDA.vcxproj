@@ -213,6 +213,7 @@
     </ClCompile>
     <ClCompile Include="..\SerialPort\CThreadSafe.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="CAboutExDlg.cpp" />
     <ClCompile Include="CDA.cpp" />
