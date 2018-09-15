@@ -84,7 +84,7 @@ private:
 public:
 	volatile bool m_bOpen;	// CCSerialPortBase Open Flag(串口打开标志)
 
-private:
+public:
 	CRITICAL_SECTION m_csCOMSync;	// CCSerialPortBase Critical Section Sync(串口异步接收临界区)
 
 public:
