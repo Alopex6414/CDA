@@ -22,6 +22,9 @@
 #include <vector>
 #include <process.h>
 
+//Include Library
+#pragma comment(lib, "WinMM.lib")
+
 using namespace std;
 
 //Macro Definition
