@@ -86,6 +86,7 @@ private:
 
 public:
 	volatile bool m_bOpen;	// CCSerialPortBase Open Flag(串口打开标志)
+	volatile bool m_bRecv;	// CCSerialPortBase Recv Flag(串口接收标志)
 
 public:
 	CRITICAL_SECTION m_csCOMSync;	// CCSerialPortBase Critical Section Sync(串口异步接收临界区)
@@ -116,6 +117,8 @@ public:
 	~CCSerialPortBase();	// CCSerialPortBase 析构函数
 
 	bool CCSerialPortBaseGetStatus() const;			// CCSerialPortBase 获取串口状态
+	bool CCSerialPortBaseGetRecv() const;			// CCSerialPortBase 获取接收标志
+	void CCSerialPortBaseSetRecv(bool bRecv);		// CCSerialPortBase 设置接收标志
 
 	void CCSerialPortBaseSetSendBuf(unsigned char* pBuff, int nSize);	// CCSerialPortBase 设置发送缓冲
 	void CCSerialPortBaseGetRecvBuf(unsigned char* pBuff, int nSize);	// CCSerialPortBase 获取接收缓冲

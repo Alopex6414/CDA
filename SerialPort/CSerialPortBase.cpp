@@ -5,6 +5,7 @@
 CCSerialPortBase::CCSerialPortBase()
 {
 	m_bOpen = false;
+	m_bRecv = false;
 	m_hCOM = INVALID_HANDLE_VALUE;
 	m_hListenThread = INVALID_HANDLE_VALUE;
 
@@ -64,6 +65,20 @@ bool CCSerialPortBase::CCSerialPortBaseGetStatus() const
 {
 	CThreadSafe ThreadSafe(&m_csCOMSync);
 	return m_bOpen;
+}
+
+// CCSerialPortBase 获取接收状态
+bool CCSerialPortBase::CCSerialPortBaseGetRecv() const
+{
+	CThreadSafe ThreadSafe(&m_csCOMSync);
+	return m_bRecv;
+}
+
+// CCSerialPortBase 设置接收状态
+void CCSerialPortBase::CCSerialPortBaseSetRecv(bool bRecv)
+{
+	CThreadSafe ThreadSafe(&m_csCOMSync);
+	m_bRecv = bRecv;
 }
 
 // CCSerialPortBase 枚举串口(注册表)
@@ -171,8 +186,8 @@ bool CCSerialPortBase::CCSerialPortBaseConfig(S_SERIALPORT_PROPERTY sCommPropert
 	ct.ReadIntervalTimeout = MAXDWORD;
 	ct.ReadTotalTimeoutMultiplier = 0;
 	ct.ReadTotalTimeoutConstant = 0;
-	ct.WriteTotalTimeoutMultiplier = 0;
-	ct.WriteTotalTimeoutConstant = 0;
+	ct.WriteTotalTimeoutMultiplier = 500;
+	ct.WriteTotalTimeoutConstant = 5000;
 	bRet = SetCommTimeouts(m_hCOM, &ct);
 	if (!bRet)
 	{
@@ -342,14 +357,21 @@ void CCSerialPortBase::CCSerialPortBaseGetRecvBuf(unsigned char * pBuff, int nSi
 bool CCSerialPortBase::OnTranslateBuffer()
 {
 	BOOL bStatus = FALSE;
+	DWORD dwError = 0;
+	COMSTAT cs = { 0 };
 	DWORD dwBytes = 0;
+	BYTE chSendBuf[SERIALPORT_COMM_INPUT_BUFFER_SIZE] = { 0 };
 
+	//ClearCommError(m_hCOM, &dwError, &cs);
 	PurgeComm(m_hCOM, PURGE_TXCLEAR | PURGE_TXABORT);
-	m_ovWait.Offset = 0;
+	m_ovWrite.Offset = 0;
 
 	EnterCriticalSection(&m_csCOMSync);
-	bStatus = WriteFile(m_hCOM, m_chSendBuf, sizeof(m_chSendBuf), &dwBytes, &m_ovWrite);
+	memset(chSendBuf, 0, sizeof(chSendBuf));
+	memcpy_s(chSendBuf, sizeof(chSendBuf), m_chSendBuf, sizeof(m_chSendBuf));
 	LeaveCriticalSection(&m_csCOMSync);
+
+	bStatus = WriteFile(m_hCOM, chSendBuf, sizeof(chSendBuf), &dwBytes, &m_ovWrite);
 	if (FALSE == bStatus && GetLastError() == ERROR_IO_PENDING)
 	{
 		if (FALSE == ::GetOverlappedResult(m_hCOM, &m_ovWrite, &dwBytes, TRUE))
@@ -405,6 +427,7 @@ unsigned int CALLBACK CCSerialPortBase::OnReceiveBuffer(LPVOID lpParameters)
 			EnterCriticalSection(&pCSerialPortBase->m_csCOMSync);
 			memset(pCSerialPortBase->m_chRecvBuf, 0, sizeof(pCSerialPortBase->m_chRecvBuf));
 			memcpy_s(pCSerialPortBase->m_chRecvBuf, sizeof(pCSerialPortBase->m_chRecvBuf), chReadBuf, sizeof(chReadBuf));
+			pCSerialPortBase->m_bRecv = true;
 			LeaveCriticalSection(&pCSerialPortBase->m_csCOMSync);
 		}
 
