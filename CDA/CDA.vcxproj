@@ -76,14 +76,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)SerialPort;$(SolutionDir)Socket;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)SerialPort;$(SolutionDir)Socket;$(SolutionDir)ChartCtrl;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)SerialPort;$(SolutionDir)Socket;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)SerialPort;$(SolutionDir)Socket;$(SolutionDir)ChartCtrl;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -192,6 +192,37 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\ChartCtrl\ChartAxis.h" />
+    <ClInclude Include="..\ChartCtrl\ChartAxisLabel.h" />
+    <ClInclude Include="..\ChartCtrl\ChartBalloonLabel.h" />
+    <ClInclude Include="..\ChartCtrl\ChartBarSerie.h" />
+    <ClInclude Include="..\ChartCtrl\ChartCandlestickSerie.h" />
+    <ClInclude Include="..\ChartCtrl\ChartCrossHairCursor.h" />
+    <ClInclude Include="..\ChartCtrl\ChartCtrl.h" />
+    <ClInclude Include="..\ChartCtrl\ChartCursor.h" />
+    <ClInclude Include="..\ChartCtrl\ChartDateTimeAxis.h" />
+    <ClInclude Include="..\ChartCtrl\ChartDragLineCursor.h" />
+    <ClInclude Include="..\ChartCtrl\ChartFont.h" />
+    <ClInclude Include="..\ChartCtrl\ChartGanttSerie.h" />
+    <ClInclude Include="..\ChartCtrl\ChartGradient.h" />
+    <ClInclude Include="..\ChartCtrl\ChartGrid.h" />
+    <ClInclude Include="..\ChartCtrl\ChartLabel.h" />
+    <ClInclude Include="..\ChartCtrl\ChartLegend.h" />
+    <ClInclude Include="..\ChartCtrl\ChartLineSerie.h" />
+    <ClInclude Include="..\ChartCtrl\ChartLogarithmicAxis.h" />
+    <ClInclude Include="..\ChartCtrl\ChartMouseListener.h" />
+    <ClInclude Include="..\ChartCtrl\ChartPointsArray.h" />
+    <ClInclude Include="..\ChartCtrl\ChartPointsSerie.h" />
+    <ClInclude Include="..\ChartCtrl\ChartScrollBar.h" />
+    <ClInclude Include="..\ChartCtrl\ChartSerie.h" />
+    <ClInclude Include="..\ChartCtrl\ChartSerieBase.h" />
+    <ClInclude Include="..\ChartCtrl\ChartSeriesMouseListener.h" />
+    <ClInclude Include="..\ChartCtrl\ChartStandardAxis.h" />
+    <ClInclude Include="..\ChartCtrl\ChartString.h" />
+    <ClInclude Include="..\ChartCtrl\ChartSurfaceSerie.h" />
+    <ClInclude Include="..\ChartCtrl\ChartTitle.h" />
+    <ClInclude Include="..\ChartCtrl\ChartXYSerie.h" />
+    <ClInclude Include="..\ChartCtrl\PointsOrdering.h" />
     <ClInclude Include="..\SerialPort\CSerialPortBase.h" />
     <ClInclude Include="..\SerialPort\CThreadSafe.h" />
     <ClInclude Include="..\Socket\CSocketBase.h" />
@@ -208,6 +239,29 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\ChartCtrl\ChartAxis.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartAxisLabel.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartBarSerie.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartCandlestickSerie.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartCrossHairCursor.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartCtrl.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartCursor.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartDateTimeAxis.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartDragLineCursor.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartFont.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartGanttSerie.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartGradient.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartGrid.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartLegend.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartLineSerie.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartLogarithmicAxis.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartPointsSerie.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartScrollBar.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartSerie.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartStandardAxis.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartSurfaceSerie.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartTitle.cpp" />
+    <ClCompile Include="..\ChartCtrl\ChartXYSerie.cpp" />
     <ClCompile Include="..\SerialPort\CSerialPortBase.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -239,6 +293,10 @@
     <ResourceCompile Include="CDA.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\ChartCtrl\ChartBalloonLabel.inl" />
+    <None Include="..\ChartCtrl\ChartLabel.inl" />
+    <None Include="..\ChartCtrl\ChartPointsArray.inl" />
+    <None Include="..\ChartCtrl\ChartSerieBase.inl" />
     <None Include="res\CDA.rc2" />
   </ItemGroup>
   <ItemGroup>
