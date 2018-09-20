@@ -159,6 +159,15 @@
     <ClInclude Include="..\ChartCtrl\PointsOrdering.h">
       <Filter>ChartCtrl</Filter>
     </ClInclude>
+    <ClInclude Include="CTCPServerDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CTCPClientDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CUDPDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDA.cpp">
@@ -265,6 +274,15 @@
     </ClCompile>
     <ClCompile Include="..\ChartCtrl\ChartXYSerie.cpp">
       <Filter>ChartCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="CTCPServerDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CTCPClientDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CUDPDlg.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
