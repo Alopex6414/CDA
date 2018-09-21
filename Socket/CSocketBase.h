@@ -67,6 +67,8 @@ public:
 	SOCKET getRawSocket();
 	bool attachRawSocket(SOCKET s, bool bIsConnected);
 	void detachSocket();
+	const char* getHostIP();
+	USHORT getHostPort();
 	const char* getRemoteIP();
 	const wchar_t* getRemotewIP();
 	ULONG getRemoteULIP();
@@ -75,6 +77,9 @@ public:
 	void Destroy();
 
 	int m_nLastWSAError;
+
+public:
+	void GetHostIP();
 
 private:
 	SOCKET CreateTCPSocket();
@@ -86,6 +91,8 @@ private:
 	WSAEVENT m_SocketReadEvent;
 
 	bool m_bIsConnected;
+	char m_pcHostIP[SOB_IP_LENGTH];
+	USHORT m_sHostPort;
 	char m_pcRemoteIP[SOB_IP_LENGTH];
 	wchar_t m_pwcRemoteIP[SOB_IP_LENGTH];
 	USHORT m_sRemotePort;

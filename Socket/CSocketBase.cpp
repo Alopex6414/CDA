@@ -15,6 +15,10 @@ CSocketBase::CSocketBase()
 
 	m_bIsConnected = false;
 
+	//初始化本地参数
+	memset(m_pcHostIP, 0, SOB_IP_LENGTH);
+	m_sHostPort = 0;
+
 	//初始化远程参数
 	memset(m_pcRemoteIP, 0, SOB_IP_LENGTH);
 	m_sRemotePort = 0;
@@ -1037,6 +1041,18 @@ void CSocketBase::detachSocket()
 	m_socket = NULL;
 }
 
+// CSocketBase 获取本地IP(ASCII)
+const char * CSocketBase::getHostIP()
+{
+	return m_pcHostIP;
+}
+
+// CSocketBase 获取本地端口
+USHORT CSocketBase::getHostPort()
+{
+	return m_sHostPort;
+}
+
 // CSocketBase 获取远程IP(ASCII)
 const char * CSocketBase::getRemoteIP()
 {
@@ -1070,6 +1086,26 @@ bool CSocketBase::IsConnected()
 void CSocketBase::Destroy()
 {
 	this->~CSocketBase();
+}
+
+// CSocketBase 获取本地IP地址
+void CSocketBase::GetHostIP()
+{
+	char chHostName[MAX_PATH] = { 0 };
+
+	if (gethostname(chHostName, sizeof(chHostName)) == 0)
+	{
+		hostent* pHostent = gethostbyname(chHostName);
+		hostent& he = *pHostent;
+		sockaddr_in sa;
+		for (int nAdapter = 0; he.h_addr_list[nAdapter]; nAdapter++)
+		{
+			memset(m_pcHostIP, 0, SOB_IP_LENGTH);
+			memcpy(&sa.sin_addr.s_addr, he.h_addr_list[nAdapter], he.h_length);
+			strcpy(m_pcHostIP, inet_ntoa(*(struct in_addr *)he.h_addr_list[nAdapter]));
+		}
+	}
+
 }
 
 // CSocketBase 创建TCPSocket
