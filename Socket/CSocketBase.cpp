@@ -211,6 +211,8 @@ bool CSocketBase::BindOnPort(UINT uiPort)
 	addrLocal.sin_addr.s_addr = htonl(INADDR_ANY);
 	addrLocal.sin_port = htons(uiPort);
 
+	m_sHostPort = uiPort;
+
 	//°ó¶¨
 	int nRet = bind(m_socket, (PSOCKADDR)&addrLocal, sizeof(addrLocal));
 
@@ -240,6 +242,8 @@ bool CSocketBase::BindOnUDPPort(const char * pcRemoteIP, UINT uiPort)
 	addrLocal.sin_family = AF_INET;
 	addrLocal.sin_addr.s_addr = inet_addr(pcRemoteIP);
 	addrLocal.sin_port = htons(uiPort);
+
+	m_sHostPort = uiPort;
 
 	//°ó¶¨
 	int nRet = bind(m_socket, (PSOCKADDR)&addrLocal, sizeof(addrLocal));
