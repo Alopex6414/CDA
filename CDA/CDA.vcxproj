@@ -226,6 +226,7 @@
     <ClInclude Include="..\SerialPort\CSerialPortBase.h" />
     <ClInclude Include="..\SerialPort\CThreadSafe.h" />
     <ClInclude Include="..\Socket\CSocketBase.h" />
+    <ClInclude Include="..\Socket\CThreadSafeEx.h" />
     <ClInclude Include="CAboutExDlg.h" />
     <ClInclude Include="CDA.h" />
     <ClInclude Include="CDADlg.h" />
@@ -274,6 +275,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Socket\CSocketBase.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Socket\CThreadSafeEx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>

@@ -63,9 +63,6 @@
     <ClInclude Include="..\SerialPort\CThreadSafe.h">
       <Filter>SerialPort</Filter>
     </ClInclude>
-    <ClInclude Include="..\Socket\CSocketBase.h">
-      <Filter>Socket</Filter>
-    </ClInclude>
     <ClInclude Include="..\ChartCtrl\ChartAxis.h">
       <Filter>ChartCtrl</Filter>
     </ClInclude>
@@ -168,6 +165,12 @@
     <ClInclude Include="CUDPDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\Socket\CThreadSafeEx.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Socket\CSocketBase.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDA.cpp">
@@ -202,9 +205,6 @@
     </ClCompile>
     <ClCompile Include="..\SerialPort\CThreadSafe.cpp">
       <Filter>SerialPort</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Socket\CSocketBase.cpp">
-      <Filter>Socket</Filter>
     </ClCompile>
     <ClCompile Include="..\ChartCtrl\ChartAxis.cpp">
       <Filter>ChartCtrl</Filter>
@@ -283,6 +283,12 @@
     </ClCompile>
     <ClCompile Include="CUDPDlg.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Socket\CThreadSafeEx.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Socket\CSocketBase.cpp">
+      <Filter>Socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
