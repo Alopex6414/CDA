@@ -10,12 +10,12 @@ CThreadSafeEx::~CThreadSafeEx()
 	DeleteCriticalSection(&m_CriticalSection);
 }
 
-inline void CThreadSafeEx::Enter()
+void CThreadSafeEx::Enter()
 {
 	EnterCriticalSection(&m_CriticalSection);
 }
 
-inline void CThreadSafeEx::Leave()
+void CThreadSafeEx::Leave()
 {
 	LeaveCriticalSection(&m_CriticalSection);
 }

@@ -22,6 +22,8 @@
 
 #define SOB_IP_LENGTH				128             //IP地址长度
 
+#define SOB_TCP_SEND_BUFFER			32*1024			//TCP发送缓冲32K
+#define SOB_TCP_RECV_BUFFER			32*1024			//TCP接收缓冲32K
 #define SOB_UDP_RECV_BUFFER			32*1024			//UDP接收缓冲32K
 
 #define SOB_DEFAULT_TIMEOUT_SEC		5				//默认的超时时间
@@ -63,6 +65,8 @@ public:
 	bool CCSocketBaseListen();					// CCSocketBase 监听服务端端口
 	bool CCSocketBaseAccept(HANDLE_ACCEPT_THREAD pThreadFunc, HANDLE_ACCEPT_CALLBACK pCallback, DWORD dwUser, BOOL* pExitFlag = NULL, USHORT nLoopTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);	// CCSocketBase 接收客户端连接请求
 
+	int CCSocketBaseSendOnce(SOCKET Socket, char* pSendBuffer, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);										// CCSocketBase 发送缓冲数据(发送全部数据)
+	int CCSocketBaseSendBuffer(SOCKET Socket, char* pSendBuffer, UINT uiBufferSize, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);					// CCSocketBase 发送缓冲数据(发送一定数据)
 	int CCSocketBaseRecvOnce(SOCKET Socket, char* pRecvBuffer, UINT uiBufferSize, UINT& uiRecv, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);		// CCSocketBase 接收缓冲数据(接收全部数据)
 	int CCSocketBaseRecvBuffer(SOCKET Socket, char* pRecvBuffer, UINT uiBufferSize, UINT uiRecvSize, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);	// CCSocketBase 接收缓冲数据(接收一定数据)
 

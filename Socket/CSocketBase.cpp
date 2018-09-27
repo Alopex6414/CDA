@@ -248,6 +248,203 @@ bool CCSocketBase::CCSocketBaseAccept(HANDLE_ACCEPT_THREAD pThreadFunc, HANDLE_A
 	return true;
 }
 
+// CCSocketBase 发送缓冲数据(缓冲应该比待接受量要大一点才安全)<发送全部数据>
+int CCSocketBase::CCSocketBaseSendOnce(SOCKET Socket, char * pSendBuffer, USHORT nTimeOutSec)
+{
+	bool bIsTimeOut = false;
+
+	// 发送前注册事件
+	WSAResetEvent(m_SocketWriteEvent);
+	WSAEventSelect(Socket, m_SocketWriteEvent, FD_WRITE | FD_CLOSE);
+
+	// 尝试发送
+	int nRet = send(Socket, pSendBuffer, (int)strlen(pSendBuffer), NULL);
+
+	if (nRet == SOCKET_ERROR)
+	{
+		m_nLastWSAError = WSAGetLastError();
+
+		// 遭遇阻塞
+		if (m_nLastWSAError == WSAEWOULDBLOCK)
+		{
+			DWORD dwRet = WSAWaitForMultipleEvents(1, &m_SocketWriteEvent, FALSE, nTimeOutSec * 1000, FALSE);
+
+			// 如果网络事件发生
+			WSANETWORKEVENTS wsaEvents;
+			memset(&wsaEvents, 0, sizeof(wsaEvents));
+
+			if (dwRet == WSA_WAIT_EVENT_0)
+			{
+				WSAResetEvent(m_SocketWriteEvent);
+				WSAEnumNetworkEvents(Socket, m_SocketWriteEvent, &wsaEvents);
+
+				// 如果发送可以进行并且没有错误发生
+				if ((wsaEvents.lNetworkEvents & FD_WRITE) &&
+					(wsaEvents.iErrorCode[FD_WRITE_BIT] == 0))
+				{
+					// 再次发送文本
+					nRet = (int)send(Socket, pSendBuffer, (int)strlen(pSendBuffer), NULL);
+
+					if (nRet > 0)
+					{
+						// 如果发送字节大于0，表明发送成功
+						return SOB_RET_OK;
+					}
+				}
+			}
+			else
+			{
+				// 超时
+				bIsTimeOut = true;
+			}
+		}
+		else
+		{
+
+		}
+	}
+	else
+	{
+		// 第一次便发送成功
+		return SOB_RET_OK;
+	}
+
+	// 如果超时
+	if (bIsTimeOut)
+	{
+		return SOB_RET_TIMEOUT;
+	}
+
+	// 如果上述发送失败
+	m_nLastWSAError = WSAGetLastError();
+
+	return SOB_RET_FAIL;
+}
+
+// CCSocketBase 发送缓冲数据(缓冲应该比待接受量要大一点才安全)<发送一定数据>
+int CCSocketBase::CCSocketBaseSendBuffer(SOCKET Socket, char * pSendBuffer, UINT uiBufferSize, USHORT nTimeOutSec)
+{
+	bool bIsTimeOut = false;
+
+	// 发送前注册事件
+	WSAResetEvent(m_SocketWriteEvent);
+	WSAEventSelect(Socket, m_SocketWriteEvent, FD_WRITE | FD_CLOSE);
+
+	// 发送量计数
+	int nSent = 0;
+
+	// 总发送次数，为发送次数定一个限额
+	int nSendTimes = 0;
+	int nSendLimitTimes = (int)((float)uiBufferSize / 500 + 1.5);		// 假定当前每次发送肯定不少于500字节
+	UINT uiLeftBuffer = uiBufferSize;									// 未发送完的缓存大小
+
+	// 发送游标
+	char* pcSentPos = pSendBuffer;
+
+	// 直到所有的缓冲都发送完毕
+	while (nSent < (int)uiBufferSize)
+	{
+		// 检查发送次数是否超限
+		if (nSendTimes > nSendLimitTimes)
+		{
+			break;
+		}
+
+		int nRet = send(Socket, pcSentPos, uiLeftBuffer, NULL);
+
+		if (nRet == SOCKET_ERROR)
+		{
+			m_nLastWSAError = WSAGetLastError();
+
+			// 遭遇阻塞
+			if (m_nLastWSAError == WSAEWOULDBLOCK)
+			{
+				DWORD dwRet = WSAWaitForMultipleEvents(1, &m_SocketWriteEvent, FALSE, nTimeOutSec * 1000, FALSE);
+
+				// 如果网络事件发生
+				WSANETWORKEVENTS wsaEvents;
+				memset(&wsaEvents, 0, sizeof(wsaEvents));
+
+				if (dwRet == WSA_WAIT_EVENT_0)
+				{
+					WSAResetEvent(m_SocketWriteEvent);
+					WSAEnumNetworkEvents(Socket, m_SocketWriteEvent, &wsaEvents);
+
+					// 如果发送可以进行并且没有错误发生
+					if ((wsaEvents.lNetworkEvents & FD_WRITE) &&
+						(wsaEvents.iErrorCode[FD_WRITE_BIT] == 0))
+					{
+						// 再次发送文本
+						nRet = send(Socket, pcSentPos, uiLeftBuffer, NULL);
+
+						if (nRet > 0)
+						{
+							// 如果发送字节大于0，表明发送成功
+							nSendTimes++;
+
+							nSent += nRet;
+							uiLeftBuffer -= nRet;
+							pcSentPos += nRet;
+						}
+						else
+						{
+							m_nLastWSAError = WSAGetLastError();
+
+							// 如果接收到事件发送时也阻塞了，则等待一个周期后重试
+							if (m_nLastWSAError == WSAEWOULDBLOCK)
+							{
+								Sleep(1);
+							}
+							else
+							{
+								// 对于其他错误，直接退出
+								break;
+							}
+						}
+					}
+				}
+				else
+				{
+					// 超时
+					bIsTimeOut = true;
+					break;
+				}
+			}
+			else
+			{
+				// 遇到阻塞之外的错误，直接退出
+				break;
+			}
+		}
+		else
+		{
+			// 发送成功，累加发送量，更新游标
+			nSendTimes++;
+
+			nSent += nRet;
+			uiLeftBuffer -= nRet;
+			pcSentPos += nRet;
+		}
+	}
+
+	// 如果发送完成
+	if (nSent == uiBufferSize)
+	{
+		return SOB_RET_OK;
+	}
+
+	// 如果超时
+	if (bIsTimeOut)
+	{
+		return SOB_RET_TIMEOUT;
+	}
+
+	// 没能成功返回
+	m_nLastWSAError = WSAGetLastError();
+
+	return SOB_RET_FAIL;
+}
+
 // CCSocketBase 接收缓冲数据(缓冲应该比待接受量要大一点才安全)<接收全部数据>
 int CCSocketBase::CCSocketBaseRecvOnce(SOCKET Socket, char * pRecvBuffer, UINT uiBufferSize, UINT & uiRecv, USHORT nTimeOutSec)
 {
