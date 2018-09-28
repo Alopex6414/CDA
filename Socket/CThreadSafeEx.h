@@ -11,6 +11,9 @@ private:
 	CRITICAL_SECTION m_CriticalSection;
 
 public:
+	CRITICAL_SECTION* GetCriticalSection();
+
+public:
 	CThreadSafeEx();
 	~CThreadSafeEx();
 

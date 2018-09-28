@@ -19,3 +19,9 @@ void CThreadSafeEx::Leave()
 {
 	LeaveCriticalSection(&m_CriticalSection);
 }
+
+CRITICAL_SECTION * CThreadSafeEx::GetCriticalSection()
+{
+	CRITICAL_SECTION* pCriticalSection = &m_CriticalSection;
+	return pCriticalSection;
+}
