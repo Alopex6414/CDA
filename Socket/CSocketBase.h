@@ -59,6 +59,24 @@ private:
 	SOCKET CreateTCPSocket();					// CCSocketBase 创建TCP套接字
 	SOCKET CreateUDPSocket();					// CCSocketBase 创建UDP套接字
 
+// 公用成员函数
+public:
+	void CCSocketBaseSetRecvTimeOut(UINT uiMSec);			// CCSocketBase 设置接收超时时长
+	void CCSocketBaseSetSendTimeOut(UINT uiMSec);			// CCSocketBase 设置发送超时时长
+	void CCSocketBaseSetRecvBufferSize(UINT uiByte);		// CCSocketBase 设置接收数组长度
+	void CCSocketBaseSetSendBufferSize(UINT uiByte);		// CCSocketBase 设置发送数组长度
+
+	SOCKET CCSocketBaseGetRawSocket() const;				// CCSocketBase 获取Socket句柄
+	bool CCSocketBaseAttachRawSocket(SOCKET s, bool bIsConnected);	// CCSocketBase 绑定Socket套接字
+	void CCSocketBaseDettachRawSocket();					// CCSocketBase 分离Socket套接字
+
+	const char* CCSocketBaseGetRemoteIP() const;			// CCSocketBase 获取远端IP地址(ASCII)
+	const wchar_t* CCSocketBaseGetRemoteIPW() const;		// CCSocketBase 获取远端IP地址(Unicode)
+	ULONG CCSocketBaseGetRemoteIPUL() const;				// CCSocketBase 获取远端IP地址(ULONG)
+	USHORT CCSocketBaseGetRemotePort() const;				// CCSocketBase 获取远程端口号
+	bool CCSocketBaseIsConnected() const;					// CCSocketBase 获取连接状态(客户端)
+	void CCSocketBaseDestory();								// CCSocketBase 删除SocketBase类
+
 // TCP服务端成员函数
 public:
 	bool CCSocketBaseBindOnPort(USHORT uPort);	// CCSocketBase 绑定服务端端口
@@ -72,15 +90,21 @@ public:
 
 // TCP客户端成员函数
 public:
-
+	bool CCSocketBaseConnect(const char* pcRemoteIP = NULL, USHORT sPort = 0, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);						// CCSocketBase 发送服务器连接请求
+	bool CCSocketBaseReConnect();																													// CCSocketBase 尝试重新连接服务器
+	void CCSocketBaseDisConnect();																													// CCSocketBase 断开与服务器的连接
 
 // UDP成员函数
 public:
-
+	int CCSocketBaseSendOnce(char* pSendBuffer, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);														// CCSocketBase 发送缓冲数据(发送全部数据)
+	int CCSocketBaseSendBuffer(char* pSendBuffer, UINT uiBufferSize, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);									// CCSocketBase 发送缓冲数据(发送一定数据)
+	int CCSocketBaseRecvOnce(char* pRecvBuffer, UINT uiBufferSize, UINT& uiRecv, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);						// CCSocketBase 接收缓冲数据(接收全部数据)
+	int CCSocketBaseRecvBuffer(char* pRecvBuffer, UINT uiBufferSize, UINT uiRecvSize, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);				// CCSocketBase 接收缓冲数据(接收一定数据)
 
 // 其他函数
 public:
-	static void GetLocalIPAddr();
+	static bool ResolveAddressToIp(const char* pcAddress, char* pcIp);			// CCSocketBase 网址转换为IP地址
+	static void GetLocalIPAddr();												// CCSocketBase 获取本地IP地址
 	
 	static const char* GetLocalIP();
 	static USHORT GetLocalPort();
