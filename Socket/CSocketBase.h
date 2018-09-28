@@ -94,12 +94,17 @@ public:
 	bool CCSocketBaseReConnect();																													// CCSocketBase 尝试重新连接服务器
 	void CCSocketBaseDisConnect();																													// CCSocketBase 断开与服务器的连接
 
-// UDP成员函数
-public:
 	int CCSocketBaseSendOnce(char* pSendBuffer, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);														// CCSocketBase 发送缓冲数据(发送全部数据)
 	int CCSocketBaseSendBuffer(char* pSendBuffer, UINT uiBufferSize, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);									// CCSocketBase 发送缓冲数据(发送一定数据)
 	int CCSocketBaseRecvOnce(char* pRecvBuffer, UINT uiBufferSize, UINT& uiRecv, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);						// CCSocketBase 接收缓冲数据(接收全部数据)
 	int CCSocketBaseRecvBuffer(char* pRecvBuffer, UINT uiBufferSize, UINT uiRecvSize, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);				// CCSocketBase 接收缓冲数据(接收一定数据)
+
+// UDP成员函数
+public:
+	bool CCSocketBaseUDPBindOnPort(const char* pcRemoteIP, UINT uiPort);																							// CCSocketBase 绑定端口(UDP)
+
+	int CCSocketBaseUDPSendBuffer(const char* pcIP, SHORT sPort, char* pBuffer, UINT uiBufferSize, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);					// CCSocketBase 发送数据缓冲(UDP)
+	int CCSocketBaseUDPRecvBuffer(char* pBuffer, UINT uiBufferSize, UINT& uiRecv, char* pcIP, USHORT& uPort, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);			// CCSocketBase 接收数据缓冲(UDP)
 
 // 其他函数
 public:

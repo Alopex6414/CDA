@@ -1324,6 +1324,197 @@ int CCSocketBase::CCSocketBaseRecvBuffer(char * pRecvBuffer, UINT uiBufferSize, 
 	return SOB_RET_FAIL;
 }
 
+// CCSocketBase 绑定UDP端口
+bool CCSocketBase::CCSocketBaseUDPBindOnPort(const char * pcRemoteIP, UINT uiPort)
+{
+	// 如果socket无效则新建，为了可以重复调用
+	if (m_socket == NULL)
+	{
+		m_socket = CreateUDPSocket();
+	}
+
+	// 开启本地监听
+	SOCKADDR_IN addrLocal;
+	memset(&addrLocal, 0, sizeof(addrLocal));
+
+	addrLocal.sin_family = AF_INET;
+	addrLocal.sin_addr.s_addr = inet_addr(pcRemoteIP);
+	addrLocal.sin_port = htons(uiPort);
+
+	// 绑定
+	int nRet = bind(m_socket, (PSOCKADDR)&addrLocal, sizeof(addrLocal));
+
+	// 唯一的原因是端口被占用
+	if (nRet == SOCKET_ERROR)
+	{
+		m_nLastWSAError = WSAGetLastError();
+		return false;
+	}
+	m_bIsConnected = true;
+
+	return true;
+}
+
+// CCSocketBase 发送缓冲数据(UDP)
+int CCSocketBase::CCSocketBaseUDPSendBuffer(const char * pcIP, SHORT sPort, char * pBuffer, UINT uiBufferSize, USHORT nTimeOutSec)
+{
+	if (m_socket == NULL)
+	{
+		m_socket = CreateUDPSocket();
+	}
+
+	bool bIsTimeOut = false;
+
+	// 发送量计数
+	int nSent = 0;
+
+	// 总发送次数，为发送次数定一个限额
+	int nSendTimes = 0;
+	int nSendLimitTimes = nTimeOutSec * 1000 / 100;						// 如果遇到阻塞，等待100ms后重发
+	UINT uiLeftBuffer = uiBufferSize;									// 未发送完的缓存大小
+
+	// 转换远程地址
+	SOCKADDR_IN addrRemote;
+	memset(&addrRemote, 0, sizeof(addrRemote));
+
+	addrRemote.sin_family = AF_INET;
+	addrRemote.sin_addr.s_addr = inet_addr(pcIP);
+	addrRemote.sin_port = htons(sPort);
+
+	// 发送游标
+	char* pcSentPos = pBuffer;
+
+	// 直到所有的缓冲都发送完毕
+	while (nSent < (int)uiBufferSize)
+	{
+		// 检查发送次数是否超限
+		if (nSendTimes > nSendLimitTimes)
+		{
+			bIsTimeOut = true;
+			break;
+		}
+
+		int nRet = sendto(m_socket, pcSentPos, uiLeftBuffer, NULL, (PSOCKADDR)&addrRemote, sizeof(addrRemote));
+
+		if (nRet == SOCKET_ERROR)
+		{
+			m_nLastWSAError = WSAGetLastError();
+			break;
+		}
+		else
+		{
+			// 发送成功，累加发送量，更新游标
+			nSendTimes++;
+
+			nSent += nRet;
+			uiLeftBuffer -= nRet;
+			pcSentPos += nRet;
+		}
+	}
+
+	// 如果发送完成
+	if (nSent == uiBufferSize)
+	{
+		return SOB_RET_OK;
+	}
+
+	// 如果超时
+	if (bIsTimeOut)
+	{
+		return SOB_RET_TIMEOUT;
+	}
+
+	// 没能成功返回
+	m_nLastWSAError = WSAGetLastError();
+
+	return SOB_RET_FAIL;
+}
+
+// CCSocketBase 接收缓冲数据(UDP)
+int CCSocketBase::CCSocketBaseUDPRecvBuffer(char * pBuffer, UINT uiBufferSize, UINT & uiRecv, char * pcIP, USHORT & uPort, USHORT nTimeOutSec)
+{
+	bool bIsTimeOut = false;
+
+	// 发送前注册事件
+	WSAResetEvent(m_SocketReadEvent);
+	WSAEventSelect(m_socket, m_SocketReadEvent, FD_READ);
+
+	// 远程信息
+	SOCKADDR_IN addrRemote;
+	int nAddrLen = sizeof(addrRemote);
+	memset(&addrRemote, 0, nAddrLen);
+
+	// 尝试接收
+	int nRet = recvfrom(m_socket, pBuffer, uiBufferSize, NULL, (PSOCKADDR)&addrRemote, &nAddrLen);
+
+	if (nRet == SOCKET_ERROR)
+	{
+		m_nLastWSAError = WSAGetLastError();
+
+		// 遭遇阻塞
+		if (m_nLastWSAError == WSAEWOULDBLOCK)
+		{
+			DWORD dwRet = WSAWaitForMultipleEvents(1, &m_SocketReadEvent, FALSE, nTimeOutSec * 1000, FALSE);
+
+			// 如果网络事件发生
+			WSANETWORKEVENTS wsaEvents;
+			memset(&wsaEvents, 0, sizeof(wsaEvents));
+
+			if (dwRet == WSA_WAIT_EVENT_0)
+			{
+				WSAResetEvent(m_SocketReadEvent);
+				int nEnum = WSAEnumNetworkEvents(m_socket, m_SocketReadEvent, &wsaEvents);
+
+				// 如果接受可以进行并且没有错误发生
+				if ((wsaEvents.lNetworkEvents & FD_READ) &&
+					(wsaEvents.iErrorCode[FD_READ_BIT] == 0))
+				{
+					// 再次接受文本
+					nRet = recvfrom(m_socket, pBuffer, uiBufferSize, NULL, (PSOCKADDR)&addrRemote, &nAddrLen);
+
+					if (nRet > 0)
+					{
+						// 如果字节大于0，表明接收成功
+						uiRecv = nRet;
+
+						// 更新IP和端口
+						strcpy(pcIP, inet_ntoa(addrRemote.sin_addr));
+						uPort = ntohs(addrRemote.sin_port);
+
+						return SOB_RET_OK;
+					}
+				}
+			}
+			else
+			{
+				bIsTimeOut = true;
+			}
+		}
+	}
+	else
+	{
+		// 第一次便接收成功
+		uiRecv = nRet;
+
+		// 更新IP和端口
+		strcpy(pcIP, inet_ntoa(addrRemote.sin_addr));
+		uPort = ntohs(addrRemote.sin_port);
+
+		return SOB_RET_OK;
+	}
+
+	// 如果超时
+	if (bIsTimeOut)
+	{
+		return SOB_RET_TIMEOUT;
+	}
+
+	// 如果上述接收失败
+	m_nLastWSAError = WSAGetLastError();
+
+	return SOB_RET_FAIL;
+}
+
 // CCSocketBase 网址转换为IP地址
 bool CCSocketBase::ResolveAddressToIp(const char * pcAddress, char * pcIp)
 {
