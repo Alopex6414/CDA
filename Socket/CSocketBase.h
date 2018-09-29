@@ -6,8 +6,15 @@
 //Include WinSock2 Header File
 #include <WinSock2.h>
 
+//Include C/C++ Header File
+#include <iostream>
+#include <map>
+#include <vector>
+
 //Include WinSock2 Library
 #pragma comment(lib, "Ws2_32.lib")
+
+using namespace std;
 
 //Macro Definition
 #ifndef _CRT_SECURE_NO_WARNINGS
@@ -27,7 +34,7 @@
 #define SOB_UDP_RECV_BUFFER			32*1024			//UDP接收缓冲32K
 
 #define SOB_DEFAULT_TIMEOUT_SEC		5				//默认的超时时间
-#define SOB_DEFAULT_MAX_CLIENT		0xFFFF			//默认服务端连接数
+#define SOB_DEFAULT_MAX_CLIENT		20				//默认服务端最大连接数
 
 #define SOB_RET_OK					1				//正常
 #define SOB_RET_FAIL				0				//错误
@@ -88,6 +95,12 @@ public:
 	int CCSocketBaseRecvOnce(SOCKET Socket, char* pRecvBuffer, UINT uiBufferSize, UINT& uiRecv, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);		// CCSocketBase 接收缓冲数据(接收全部数据)
 	int CCSocketBaseRecvBuffer(SOCKET Socket, char* pRecvBuffer, UINT uiBufferSize, UINT uiRecvSize, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);	// CCSocketBase 接收缓冲数据(接收一定数据)
 
+	USHORT CCSocketBaseGetConnectMaxCount() const;																									// CCSocketBase 获取最大连接数量
+	int CCSocketBaseGetConnectCount() const;																										// CCSocketBase 获取当前连接的数量
+	map<int, HANDLE>& CCSocketBaseGetConnectMap();																									// CCSocketBase 获取当前连接的Map
+
+	void CCSocketBaseSetConnectMaxCount(USHORT sMaxCount);																							// CCSocketBase 设置最大连接数量
+
 // TCP客户端成员函数
 public:
 	bool CCSocketBaseConnect(const char* pcRemoteIP = NULL, USHORT sPort = 0, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);						// CCSocketBase 发送服务器连接请求
@@ -135,6 +148,8 @@ public:
 
 // TCP服务端成员
 private:
+	map<int, HANDLE> m_mapAccept;	// CCSocketBase 服务端连接线程
+	int m_nAcceptCount;				// CCSocketBase 服务端连接数量
 	USHORT m_sMaxCount;				// CCSocketBase 服务端最大连接数
 
 // TCP客户端成员

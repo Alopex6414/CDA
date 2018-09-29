@@ -19,6 +19,9 @@ CCSocketBase::CCSocketBase()
 	m_bIsConnected = false;
 	m_sMaxCount = SOB_DEFAULT_MAX_CLIENT;
 
+	m_nAcceptCount = 0;
+	m_mapAccept.clear();
+
 	memset(m_pcRemoteIP, 0, SOB_IP_LENGTH);
 	m_sRemotePort = 0;
 
@@ -767,6 +770,30 @@ int CCSocketBase::CCSocketBaseRecvBuffer(SOCKET Socket, char * pRecvBuffer, UINT
 	m_nLastWSAError = WSAGetLastError();
 
 	return SOB_RET_FAIL;
+}
+
+// CCSocketBase 获取最大连接数量
+USHORT CCSocketBase::CCSocketBaseGetConnectMaxCount() const
+{
+	return m_sMaxCount;
+}
+
+// CCSocketBase 获取当前连接的数量(线程)
+int CCSocketBase::CCSocketBaseGetConnectCount() const
+{
+	return m_nAcceptCount;
+}
+
+// CCSocketBase 获取当前连接的线程Map
+map<int, HANDLE>& CCSocketBase::CCSocketBaseGetConnectMap()
+{
+	return m_mapAccept;
+}
+
+// CCSocketBase 设置最大连接数量
+void CCSocketBase::CCSocketBaseSetConnectMaxCount(USHORT sMaxCount)
+{
+	m_sMaxCount = sMaxCount;
 }
 
 // CCSocketBase 发送服务器连接请求(无参数调用表示重连)
