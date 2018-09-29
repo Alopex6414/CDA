@@ -100,6 +100,7 @@ public:
 	map<int, HANDLE>& CCSocketBaseGetConnectMap();																									// CCSocketBase 获取当前连接的Map
 
 	void CCSocketBaseSetConnectMaxCount(USHORT sMaxCount);																							// CCSocketBase 设置最大连接数量
+	void CCSocketBaseSetConnectCount(int nAcceptCount);																								// CCSocketBase 设置当前连接数量
 
 // TCP客户端成员函数
 public:

@@ -356,8 +356,10 @@ bool CCSocketBase::CCSocketBaseAccept(HANDLE_ACCEPT_THREAD pThreadFunc, HANDLE_A
 
 					hThread = (HANDLE)_beginthreadex(NULL, 0, pThreadFunc, (void*)(&sClientInfo), 0, &unThreadID);
 
+					m_mapAccept.insert(pair<int, HANDLE>(m_nAcceptCount++, hThread));
+
 					// 已经不需要此HANDLE
-					CloseHandle(hThread);
+					//CloseHandle(hThread);
 				}
 				else if (pCallback)		// 如果定义回调则进行回调
 				{
@@ -794,6 +796,12 @@ map<int, HANDLE>& CCSocketBase::CCSocketBaseGetConnectMap()
 void CCSocketBase::CCSocketBaseSetConnectMaxCount(USHORT sMaxCount)
 {
 	m_sMaxCount = sMaxCount;
+}
+
+// CCSocketBase 设置当前连接数量
+void CCSocketBase::CCSocketBaseSetConnectCount(int nAcceptCount)
+{
+	m_nAcceptCount = nAcceptCount;
 }
 
 // CCSocketBase 发送服务器连接请求(无参数调用表示重连)
