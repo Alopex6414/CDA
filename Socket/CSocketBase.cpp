@@ -423,7 +423,8 @@ int CCSocketBase::CCSocketBaseSendOnce(SOCKET Socket, char * pSendBuffer, USHORT
 				else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
 					(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
 				{
-					Sleep(10);
+					// 客户端已经关闭连接
+					return SOB_RET_CLOSE;
 				}
 			}
 			else
@@ -539,7 +540,8 @@ int CCSocketBase::CCSocketBaseSendBuffer(SOCKET Socket, char * pSendBuffer, UINT
 					else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
 						(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
 					{
-						Sleep(10);
+						// 客户端已经关闭连接
+						return SOB_RET_CLOSE;
 					}
 				}
 				else
@@ -631,7 +633,8 @@ int CCSocketBase::CCSocketBaseRecvOnce(SOCKET Socket, char * pRecvBuffer, UINT u
 				else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
 					(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
 				{
-					Sleep(10);
+					// 客户端已经关闭连接
+					return SOB_RET_CLOSE;
 				}
 			}
 			else
@@ -745,7 +748,8 @@ int CCSocketBase::CCSocketBaseRecvBuffer(SOCKET Socket, char * pRecvBuffer, UINT
 					else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
 						(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
 					{
-						Sleep(10);
+						// 客户端已经关闭连接
+						return SOB_RET_CLOSE;
 					}
 				}
 				else

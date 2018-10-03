@@ -39,6 +39,7 @@ using namespace std;
 #define SOB_RET_OK					1				//正常
 #define SOB_RET_FAIL				0				//错误
 #define SOB_RET_TIMEOUT				-1				//超时
+#define SOB_RET_CLOSE				-2				//断开
 
 //Struct Definition
 typedef struct
@@ -97,7 +98,7 @@ public:
 
 	USHORT CCSocketBaseGetConnectMaxCount() const;																									// CCSocketBase 获取最大连接数量
 	int CCSocketBaseGetConnectCount() const;																										// CCSocketBase 获取当前连接的数量
-	map<int, HANDLE>& CCSocketBaseGetConnectMap();																									// CCSocketBase 获取当前连接的Map
+	map<int, HANDLE>& CCSocketBaseGetConnectMap();																									// CCSocketBase 获取当前连接的Map																									// CCSocketBase 获取当前连接状态Map
 
 	void CCSocketBaseSetConnectMaxCount(USHORT sMaxCount);																							// CCSocketBase 设置最大连接数量
 	void CCSocketBaseSetConnectCount(int nAcceptCount);																								// CCSocketBase 设置当前连接数量
