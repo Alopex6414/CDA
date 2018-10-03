@@ -420,6 +420,11 @@ int CCSocketBase::CCSocketBaseSendOnce(SOCKET Socket, char * pSendBuffer, USHORT
 						return SOB_RET_OK;
 					}
 				}
+				else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
+					(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
+				{
+					Sleep(10);
+				}
 			}
 			else
 			{
@@ -531,6 +536,11 @@ int CCSocketBase::CCSocketBaseSendBuffer(SOCKET Socket, char * pSendBuffer, UINT
 							}
 						}
 					}
+					else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
+						(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
+					{
+						Sleep(10);
+					}
 				}
 				else
 				{
@@ -617,6 +627,11 @@ int CCSocketBase::CCSocketBaseRecvOnce(SOCKET Socket, char * pRecvBuffer, UINT u
 						uiRecv = nRet;
 						return SOB_RET_OK;
 					}
+				}
+				else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
+					(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
+				{
+					Sleep(10);
 				}
 			}
 			else
@@ -726,6 +741,11 @@ int CCSocketBase::CCSocketBaseRecvBuffer(SOCKET Socket, char * pRecvBuffer, UINT
 								break;
 							}
 						}
+					}
+					else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
+						(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
+					{
+						Sleep(10);
 					}
 				}
 				else
