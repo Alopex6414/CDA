@@ -805,7 +805,7 @@ USHORT CCSocketBase::CCSocketBaseGetConnectMaxCount() const
 }
 
 // CCSocketBase 获取当前连接的数量(线程)
-int CCSocketBase::CCSocketBaseGetConnectCount() const
+int& CCSocketBase::CCSocketBaseGetConnectCount()
 {
 	return m_nAcceptCount;
 }

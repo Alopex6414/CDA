@@ -97,7 +97,7 @@ public:
 	int CCSocketBaseRecvBuffer(SOCKET Socket, char* pRecvBuffer, UINT uiBufferSize, UINT uiRecvSize, USHORT nTimeOutSec = SOB_DEFAULT_TIMEOUT_SEC);	// CCSocketBase 接收缓冲数据(接收一定数据)
 
 	USHORT CCSocketBaseGetConnectMaxCount() const;																									// CCSocketBase 获取最大连接数量
-	int CCSocketBaseGetConnectCount() const;																										// CCSocketBase 获取当前连接的数量
+	int& CCSocketBaseGetConnectCount();																										// CCSocketBase 获取当前连接的数量
 	map<int, HANDLE>& CCSocketBaseGetConnectMap();																									// CCSocketBase 获取当前连接的Map																									// CCSocketBase 获取当前连接状态Map
 
 	void CCSocketBaseSetConnectMaxCount(USHORT sMaxCount);																							// CCSocketBase 设置最大连接数量
