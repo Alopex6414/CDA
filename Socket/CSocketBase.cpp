@@ -1,4 +1,5 @@
 #include "CSocketBase.h"
+#include "CThreadSafe.h"
 
 #include <Windows.h>
 #include <Ws2tcpip.h>
