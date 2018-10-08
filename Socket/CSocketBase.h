@@ -125,6 +125,7 @@ public:
 public:
 	static bool ResolveAddressToIp(const char* pcAddress, char* pcIp);			// CCSocketBase 网址转换为IP地址
 	static void GetLocalIPAddr();												// CCSocketBase 获取本地IP地址
+	void GetLocalIPPort();														// CCSocketBase 获取本地端口号
 	
 	static const char* GetLocalIP();
 	static USHORT GetLocalPort();

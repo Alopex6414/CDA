@@ -1015,6 +1015,12 @@ int CCSocketBase::CCSocketBaseSendOnce(char * pSendBuffer, USHORT nTimeOutSec)
 						return SOB_RET_OK;
 					}
 				}
+				else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
+					(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
+				{
+					// 服务器已经关闭连接
+					return SOB_RET_CLOSE;
+				}
 			}
 			else
 			{
@@ -1132,6 +1138,12 @@ int CCSocketBase::CCSocketBaseSendBuffer(char * pSendBuffer, UINT uiBufferSize, 
 							}
 						}
 					}
+					else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
+						(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
+					{
+						// 服务器已经关闭连接
+						return SOB_RET_CLOSE;
+					}
 				}
 				else
 				{
@@ -1225,6 +1237,12 @@ int CCSocketBase::CCSocketBaseRecvOnce(char * pRecvBuffer, UINT uiBufferSize, UI
 						uiRecv = nRet;
 						return SOB_RET_OK;
 					}
+				}
+				else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
+					(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
+				{
+					// 服务器已经关闭连接
+					return SOB_RET_CLOSE;
 				}
 			}
 			else
@@ -1341,6 +1359,12 @@ int CCSocketBase::CCSocketBaseRecvBuffer(char * pRecvBuffer, UINT uiBufferSize, 
 								break;
 							}
 						}
+					}
+					else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
+						(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
+					{
+						// 服务器已经关闭连接
+						return SOB_RET_CLOSE;
 					}
 				}
 				else
@@ -1635,6 +1659,26 @@ void CCSocketBase::GetLocalIPAddr()
 		}
 	}
 
+}
+
+// CCSocketBase 获取本机端口号
+void CCSocketBase::GetLocalIPPort()
+{
+	sockaddr addr;
+	sockaddr_in* addr_v4;
+	int addr_len = sizeof(addr);
+
+	ZeroMemory(&addr, sizeof(addr));
+
+	if (0 == getsockname(m_socket, &addr, &addr_len))
+	{
+		if (addr.sa_family == AF_INET)
+		{
+			addr_v4 = (sockaddr_in*)&addr;
+			m_sLocalPort = addr_v4->sin_port;
+		}
+	}
+ 
 }
 
 // CCSocketBase 访问本机IP地址(静态)
