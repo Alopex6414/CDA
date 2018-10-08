@@ -1575,6 +1575,12 @@ int CCSocketBase::CCSocketBaseUDPRecvBuffer(char * pBuffer, UINT uiBufferSize, U
 						return SOB_RET_OK;
 					}
 				}
+				else if ((wsaEvents.lNetworkEvents & FD_CLOSE) &&
+					(wsaEvents.iErrorCode[FD_CLOSE_BIT] == 0))
+				{
+					// 已经关闭连接
+					return SOB_RET_CLOSE;
+				}
 			}
 			else
 			{
