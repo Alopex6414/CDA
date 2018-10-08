@@ -34,7 +34,7 @@ using namespace std;
 #define SOB_UDP_RECV_BUFFER			32*1024			//UDP接收缓冲32K
 
 #define SOB_DEFAULT_TIMEOUT_SEC		5				//默认的超时时间
-#define SOB_DEFAULT_MAX_CLIENT		20				//默认服务端最大连接数
+#define SOB_DEFAULT_MAX_CLIENT		10				//默认服务端最大连接数
 
 #define SOB_RET_OK					1				//正常
 #define SOB_RET_FAIL				0				//错误

@@ -327,6 +327,13 @@ bool CCSocketBase::CCSocketBaseAccept(HANDLE_ACCEPT_THREAD pThreadFunc, HANDLE_A
 			if ((wsaEvents.lNetworkEvents & FD_ACCEPT) &&
 				(wsaEvents.iErrorCode[FD_ACCEPT_BIT] == 0))
 			{
+				// 是否达到最大连接数
+				if (m_nAcceptCount + 1 > m_sMaxCount)
+				{
+					// 本线程持续监听
+					continue;
+				}
+
 				// 记录远程地址
 				SOCKADDR_IN addrRemote;
 				memset(&addrRemote, 0, sizeof(addrRemote));
@@ -370,7 +377,7 @@ bool CCSocketBase::CCSocketBaseAccept(HANDLE_ACCEPT_THREAD pThreadFunc, HANDLE_A
 		}
 		else
 		{
-			//等待超时，重新开始
+			// 等待超时，重新开始
 			continue;
 		}
 	}
