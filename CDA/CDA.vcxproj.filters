@@ -171,6 +171,9 @@
     <ClInclude Include="..\Socket\CSocketBase.h">
       <Filter>Socket</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceEx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDA.cpp">

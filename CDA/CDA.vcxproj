@@ -239,6 +239,7 @@
     <ClInclude Include="CTCPServerDlg.h" />
     <ClInclude Include="CUDPDlg.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceEx.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
