@@ -30,4 +30,6 @@ CDA项目是Windows平台下简单的通信调试助手工程。CDA可以调试�
   * ### 数据分析
   
  ## 功能
+   * ### 串口调试
+   ![](https://github.com/Alopex6414/CDA/raw/master/Photo/Serial_0.png)
  
