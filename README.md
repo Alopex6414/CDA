@@ -19,4 +19,10 @@ CDA项目是Windows平台下简单的通信调试助手工程。CDA可以调试�
     * #### *Curve*支持串口曲线展示
     * #### *Curve*支持最多8条曲线
     * #### *Curve*支持导出数据到Excel(.csv)
-    * #### *Curve*支持保存截图
+    * #### *Curve*支持保存截图  
+    
+  * ### 网络调试
+    * #### *Socket*支持TCP和UDP
+    * #### *Socket*支持TCP服务端(Server)和TCP客户端(Client)
+    * #### *Socket*支持UDP数据的同时接收发送
+    * #### *Socket*支持网络异步通信
