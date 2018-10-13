@@ -10,7 +10,7 @@ CDA项目是Windows平台下简单的通信调试助手工程。CDA可以调试�
 
 ## 模块
   * ### 串口调试
-    * #### Serial支持串口自动刷新获取
-    * #### Serial支持多种串口协议:RS-232、RS-422、RS-485
-    * #### Serial支持多种物理连接:串口(SerialPort)、蓝牙(BlueTooth)、射频(RF)
+    * #### *Serial*支持串口自动刷新获取
+    * #### *Serial*支持多种串口协议:RS-232、RS-422、RS-485
+    * #### *Serial*支持多种物理连接:串口(SerialPort)、蓝牙(BlueTooth)、射频(RF)
     
