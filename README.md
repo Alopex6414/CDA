@@ -1,5 +1,5 @@
 # CDA
-This Program is a Simple Communication Debug Assistant (CDA) Project.
+This Program is a Simple Communication Debug Assistant (CDA) Project.   
 CDA项目是Windows平台下简单的通信调试助手工程。
 
 ## 概述
