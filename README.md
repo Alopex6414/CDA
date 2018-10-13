@@ -38,4 +38,11 @@ CDA项目是Windows平台下简单的通信调试助手工程。CDA可以调试�
      * #### *实时曲线窗口*
    ![](https://github.com/Alopex6414/CDA/raw/master/Photo/Curve_0.png)
    
+   * ### 网络调试
+     * #### *网络调试窗口(TCP服务端)*
+   ![](https://github.com/Alopex6414/CDA/raw/master/Photo/Socket_tcpserver_0.png)
+     * #### *网络调试窗口(TCP客户端)*
+   ![](https://github.com/Alopex6414/CDA/raw/master/Photo/Socket_tcpclient_0.png)
+     * #### *网络调试窗口(UDP)*
+   ![](https://github.com/Alopex6414/CDA/raw/master/Photo/Socket_udp_0.png)
  
