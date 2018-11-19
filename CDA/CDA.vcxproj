@@ -232,6 +232,7 @@
     <ClInclude Include="CDADlg.h" />
     <ClInclude Include="CDataAnalysisDlg.h" />
     <ClInclude Include="CHelpDlg.h" />
+    <ClInclude Include="CMemoryAnalysisDlg.h" />
     <ClInclude Include="CNetWorkDlg.h" />
     <ClInclude Include="CRealCurveDlg.h" />
     <ClInclude Include="CSerialPortDlg.h" />
@@ -288,6 +289,7 @@
     <ClCompile Include="CDADlg.cpp" />
     <ClCompile Include="CDataAnalysisDlg.cpp" />
     <ClCompile Include="CHelpDlg.cpp" />
+    <ClCompile Include="CMemoryAnalysisDlg.cpp" />
     <ClCompile Include="CNetWorkDlg.cpp" />
     <ClCompile Include="CRealCurveDlg.cpp" />
     <ClCompile Include="CSerialPortDlg.cpp" />
