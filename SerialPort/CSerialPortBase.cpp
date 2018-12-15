@@ -341,9 +341,10 @@ void CCSerialPortBase::CCSerialPortBaseClosePort()
 }
 
 // CCSerialPortBase …Ë÷√∑¢ÀÕª∫≥Â
-void CCSerialPortBase::CCSerialPortBaseSetSendBuf(unsigned char * pBuff, int nSize)
+void CCSerialPortBase::CCSerialPortBaseSetSendBuf(unsigned char * pBuff, int nSize, DWORD& dwSendCount)
 {
 	EnterCriticalSection(&m_csCOMSync);
+	m_dwSendCount = dwSendCount;
 	memcpy_s(m_chSendBuf, sizeof(m_chSendBuf), pBuff, nSize);
 	LeaveCriticalSection(&m_csCOMSync);
 }
@@ -375,7 +376,7 @@ bool CCSerialPortBase::OnTranslateBuffer()
 	memcpy_s(chSendBuf, sizeof(chSendBuf), m_chSendBuf, sizeof(m_chSendBuf));
 	LeaveCriticalSection(&m_csCOMSync);
 
-	bStatus = WriteFile(m_hCOM, chSendBuf, sizeof(chSendBuf), &dwBytes, &m_ovWrite);
+	bStatus = WriteFile(m_hCOM, chSendBuf, m_dwSendCount, &dwBytes, &m_ovWrite);
 	if (FALSE == bStatus && GetLastError() == ERROR_IO_PENDING)
 	{
 		if (FALSE == ::GetOverlappedResult(m_hCOM, &m_ovWrite, &dwBytes, TRUE))

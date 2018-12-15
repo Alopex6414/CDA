@@ -122,7 +122,7 @@ public:
 	bool CCSerialPortBaseGetRecv() const;			// CCSerialPortBase 获取接收标志
 	void CCSerialPortBaseSetRecv(bool bRecv);		// CCSerialPortBase 设置接收标志
 
-	void CCSerialPortBaseSetSendBuf(unsigned char* pBuff, int nSize);						// CCSerialPortBase 设置发送缓冲
+	void CCSerialPortBaseSetSendBuf(unsigned char* pBuff, int nSize, DWORD& dwSendCount);	// CCSerialPortBase 设置发送缓冲
 	void CCSerialPortBaseGetRecvBuf(unsigned char* pBuff, int nSize, DWORD& dwRecvCount);	// CCSerialPortBase 获取接收缓冲
 
 	bool CCSerialPortBaseOpenPort(S_SERIALPORT_PROPERTY sCommProperty);	// CCSerialPortBase 打开串口
