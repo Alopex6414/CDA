@@ -98,6 +98,8 @@ public:
 public:
 	unsigned char m_chSendBuf[SERIALPORT_COMM_INPUT_BUFFER_SIZE];
 	unsigned char m_chRecvBuf[SERIALPORT_COMM_OUTPUT_BUFFER_SIZE];
+	DWORD m_dwSendCount;
+	DWORD m_dwRecvCount;
 
 public:
 	void EnumSerialPort();	// CCSerialPortBase 枚举串口
@@ -120,8 +122,8 @@ public:
 	bool CCSerialPortBaseGetRecv() const;			// CCSerialPortBase 获取接收标志
 	void CCSerialPortBaseSetRecv(bool bRecv);		// CCSerialPortBase 设置接收标志
 
-	void CCSerialPortBaseSetSendBuf(unsigned char* pBuff, int nSize);	// CCSerialPortBase 设置发送缓冲
-	void CCSerialPortBaseGetRecvBuf(unsigned char* pBuff, int nSize);	// CCSerialPortBase 获取接收缓冲
+	void CCSerialPortBaseSetSendBuf(unsigned char* pBuff, int nSize);						// CCSerialPortBase 设置发送缓冲
+	void CCSerialPortBaseGetRecvBuf(unsigned char* pBuff, int nSize, DWORD& dwRecvCount);	// CCSerialPortBase 获取接收缓冲
 
 	bool CCSerialPortBaseOpenPort(S_SERIALPORT_PROPERTY sCommProperty);	// CCSerialPortBase 打开串口
 	void CCSerialPortBaseClosePort();									// CCSerialPortBase 关闭串口

@@ -9,6 +9,9 @@ CCSerialPortBase::CCSerialPortBase()
 	m_hCOM = INVALID_HANDLE_VALUE;
 	m_hListenThread = INVALID_HANDLE_VALUE;
 
+	m_dwSendCount = 0;
+	m_dwRecvCount = 0;
+
 	memset(&m_ovWrite, 0, sizeof(m_ovWrite));
 	memset(&m_ovRead, 0, sizeof(m_ovRead));
 	memset(&m_ovWait, 0, sizeof(m_ovWait));
@@ -346,9 +349,10 @@ void CCSerialPortBase::CCSerialPortBaseSetSendBuf(unsigned char * pBuff, int nSi
 }
 
 // CCSerialPortBase 获取接收缓冲
-void CCSerialPortBase::CCSerialPortBaseGetRecvBuf(unsigned char * pBuff, int nSize)
+void CCSerialPortBase::CCSerialPortBaseGetRecvBuf(unsigned char * pBuff, int nSize, DWORD& dwRecvCount)
 {
 	EnterCriticalSection(&m_csCOMSync);
+	dwRecvCount = m_dwRecvCount;
 	memcpy_s(pBuff, nSize, m_chRecvBuf, sizeof(m_chRecvBuf));
 	LeaveCriticalSection(&m_csCOMSync);
 }
@@ -425,6 +429,7 @@ unsigned int CALLBACK CCSerialPortBase::OnReceiveBuffer(LPVOID lpParameters)
 			PurgeComm(pCSerialPortBase->m_hCOM, PURGE_RXCLEAR | PURGE_RXABORT);
 
 			EnterCriticalSection(&pCSerialPortBase->m_csCOMSync);
+			pCSerialPortBase->m_dwRecvCount = dwBytes;
 			memset(pCSerialPortBase->m_chRecvBuf, 0, sizeof(pCSerialPortBase->m_chRecvBuf));
 			memcpy_s(pCSerialPortBase->m_chRecvBuf, sizeof(pCSerialPortBase->m_chRecvBuf), chReadBuf, sizeof(chReadBuf));
 			pCSerialPortBase->m_bRecv = true;
